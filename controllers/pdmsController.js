@@ -1,5 +1,36 @@
 var bodyParser = require('body-parser');
-// var mongoose = require('mongoose');
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/PDMS', { useNewUrlParser: true });
+
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("we are connected!")
+});
+
+//Defining schema
+const userSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  lastLogin: String
+});
+
+//Compiling schema to model
+const User = mongoose.model('Users', userSchema);
+
+//Test
+const user = new User({ username: "Spandan",
+  password: "Sparsh",
+  lastLogin: "26/08/2020" });
+console.log(user.username);
+
+//Save
+// user.save(function (err, user) {
+//     if (err) return console.error(err);
+//     console.log(user.username);
+//   });
+
 
 // var urlEncoderParser = bodyParser.urlencoded({ extended: false })
 
@@ -19,7 +50,11 @@ module.exports = function(app){
   // });
 
   app.get('/', function(req, res) {
-      res.render('base.ejs', {data: data});
+      res.render('base/home.ejs', {data: data});
+  });
+
+  app.get('/products', function(req, res) {
+      res.render('main/products.ejs', {data: data});
   });
 
   // app.post('/todo',urlEncoderParser, function(req, res) {
