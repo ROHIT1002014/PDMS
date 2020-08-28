@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var userAuth = require('./../routers/userAuth');
 mongoose.connect('mongodb://localhost:27017/PDMS', { useNewUrlParser: true });
 
 
@@ -25,14 +26,11 @@ const user = new User({ username: "Spandan",
   lastLogin: "26/08/2020" });
 console.log(user.username);
 
-//Save
-// user.save(function (err, user) {
-//     if (err) return console.error(err);
-//     console.log(user.username);
-//   });
-
-
-// var urlEncoderParser = bodyParser.urlencoded({ extended: false })
+// Save
+user.save(function (err, user) {
+    if (err) return console.error(err);
+    console.log(user.username);
+  });
 
 var data = [
   { item: 'get milk'},
@@ -44,6 +42,10 @@ var data = [
 
 
 module.exports = function(app){
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  // user login routes
+  userAuth(app);
 
   // app.get('/todo', function(req, res) {
   //     res.render('todo.ejs', {data: data});
